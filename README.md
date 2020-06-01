@@ -5,11 +5,13 @@ Install R >= version 3.4: https://www.r-project.org/
 Install Rstudio Desktop (Free): https://rstudio.com/products/rstudio/download/
 
 Install Bioconductor:
+
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install(version = "3.11")
 
 Update core packages from Bioconductor:
+
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install()
