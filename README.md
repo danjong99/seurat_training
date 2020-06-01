@@ -1,6 +1,6 @@
 # Prerequisites:
 
-Install R >= version 3.4: https://www.r-project.org/
+Install R >= version 3.4: https://www.r-project.org/ \
 Install Rstudio Desktop (Free): https://rstudio.com/products/rstudio/download/
 
 # Install Bioconductor:
