@@ -4,7 +4,11 @@ library(patchwork)
 library(ggplot2)
 
 set.seed(1001)
+
 ## Load 10x genomics form of data
+## These are CD45+ cells from steady state C57BL/6 colon
+## with CITEseq antibodies.
+
 cmp.data <- Read10X(data.dir = "./raw_data/")
 cmp.gene.mtx <- cmp.data$`Gene Expression`
 
@@ -66,9 +70,12 @@ cmp.all.markers = FindAllMarkers(object = cmp, only.pos = T, min.pct = 0.25, log
 top10 <- cmp.all.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
 DoHeatmap(object = cmp, features = top10$gene)
 
+## http://www.immgen.org/ to find cell types
+## refer to review paper https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1795-z
+
 ## cell numuber in clusters
 table(cmp$seurat_clusters)
-##Downsampling
+## Downsampling
 small.cmp = subset(x = cmp, downsample = 100)
 DoHeatmap(object = small.cmp, features = top10$gene)
 
