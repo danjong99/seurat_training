@@ -89,11 +89,12 @@ DimPlot(object = cmp, reduction = "tsne", pt.size = 1,
 cmp.all.markers = FindAllMarkers(object = cmp, only.pos = T, min.pct = 0.25, logfc.threshold = 0.25)
 c1vsc2 <- FindMarkers(object = cmp, ident.1 = 1, ident.2 = 2)
 
-top10 <- cmp.all.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
-DoHeatmap(object = cmp, features = top10$gene)
-
-write.table(top10, file = "top10_DGE.txt", sep = '\t')
-
+top10 = cmp.all.markers %>% group_by(cluster) %>% top_n(10, avg_logFC)
+library(dplyr)
+partial_data = top50 %>% filter(cluster == 1 | cluster == 3 )
+partial_data$gene
+write.table(top50, file = "top50_DGE.txt", sep = '\t')
+DoHeatmap(object = cmp, features = partial_data$gene)
 
 ## http://www.immgen.org/ to find cell types
 ## refer to review paper https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1795-z
@@ -102,7 +103,7 @@ write.table(top10, file = "top10_DGE.txt", sep = '\t')
 table(cmp$seurat_clusters)
 ## Downsampling
 small.cmp = subset(x = cmp, downsample = 100)
-DoHeatmap(object = small.cmp, features = top10$gene)
+DoHeatmap(object = small.cmp, features = partial_data$gene)
 FeaturePlot(object = cmp, features = c("Cd24a"), reduction = 'tsne')
 
 ## Renaming clusters
@@ -114,10 +115,14 @@ DimPlot(cmp, label = T)
 
 ##### How to get count matrix / scaled matrix
 Assays(cmp)
-cmp[["RNA"]]@scale.data
+cmp[["RNA"]]@counts # count matrix
+cmp[["RNA"]]@data # normalized matrix
+cmp[["RNA"]]@scale.data # scaled matrix
+
 mtx = GetAssayData(cmp, assay = "RNA")
 class(cmp)
 class(mtx)
+rowSums(as.matrix(mtx))
 gene_row_sum = log2(rowSums(as.matrix(mtx)))
 
 x <- rnorm(mean = mean(gene_row_sum),
@@ -137,9 +142,12 @@ hist(x = gene_row_sum, labels = FALSE, freq = TRUE,
      xlab = "Avg Gene Exp (log2)", main = "Raw Data Distribution",
      col = "darkmagenta", xlim = c(-5,20))
 abline(v = 13, col = "red")
+
 high.detected.genes <- rownames(mtx)[ gene_row_sum > 13 ]
 length(high.detected.genes)
 DoHeatmap(object = small.cmp, features = high.detected.genes)
+FeaturePlot(object = cmp, features = high.detected.genes[1:2])
+VlnPlot(object = small.cmp, features = high.detected.genes[1:2])
 
 ####################################################################################################
 ### Add CITESeq data to existing Seurat Object
@@ -148,6 +156,7 @@ class(cmp.data)
 names(cmp.data)
 
 cmp.adt.mtx <- cmp.data$`Antibody Capture`
+dim(cmp.adt.mtx)
 cellid <- colnames(cmp)
 cmp.adt.mtx <- cmp.adt.mtx[,cellid]
 class(cmp.adt.mtx)
@@ -164,7 +173,7 @@ nrow(cmp.adt.mtx)
 rownames(cmp.adt.mtx)
 cmp.adt.mtx = cmp.adt.mtx[setdiff(rownames(cmp.adt.mtx), c("CD45.1","CD45.2")),]
 nrow(cmp.adt.mtx)
-
+dim(cmp.adt.mtx)
 ### Add ADT matrix to established Seurat Object
 cmp[["ADT"]] <- CreateAssayObject(counts = cmp.adt.mtx)
 Assays(cmp)
