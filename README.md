@@ -4,7 +4,7 @@ The raw data used in this sesseion are collected from sorted CD45+ immune cells 
 Platform: 10x genomics (3' scRNAseq v2 kits) \
 TotalSeq Antibodies: Type A from Biolegend \
 **_These data are never used for publication yet. So, please use only within this session._** \
-**_If you want to use the data for your own purpose, please let BK know._**
+**_If you want to use the data for your own purpose, please let BK know for discussion._**
 
 # Prerequisites:
 
