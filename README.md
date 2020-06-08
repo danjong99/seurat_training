@@ -1,3 +1,11 @@
+# Raw Data:
+
+The raw data used in this sesseion are collected from sorted CD45+ immune cells of mouse C57BL/6 colon. \
+Platform: 10x genomics (3' scRNAseq v2 kits) \
+TotalSeq Antibodies: Type A from Biolegend \
+**_This data are not open to all, yet published. Only within this session._** \
+**_If you want to use the data for your own purpose, please let BK know._**
+
 # Prerequisites:
 
 Install R >= version 3.4: https://www.r-project.org/ \
